@@ -30,11 +30,14 @@ last | grep -c "$username"
 echo # Just some extra spacing
 username=default # Declare variable
 read -p "Username: " username # Read name from terminal
-echo "Specific user enetered is $username and below is the result for its terminal activity"
-
-
-
-
+echo "Specific user entered is $username and below is the result for its terminal activity"
+ps -aux | awk '{print $1,$11}' | grep "bash" | cat >> checkTerminalActivity.txt
+if grep -q "$username" checkTerminalActivity.txt
+then
+    echo "$username is terminally active"
+else
+    echo "$username is terminally inactive"
+fi
 
 # List of users without password
 echo # Just some extra spacing
