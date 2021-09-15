@@ -14,6 +14,12 @@ then
     # If valid, then merge the files
     cp -r $directory1/* merged_q2
     cp -r $directory2/* merged_q2
+    # cp = copy files and directories
+    # -r = Recursively copy inside the subdirectories
+    # $directory1/* = Copy all the files under 
+    # Copy into merged_q2
+
+    echo "Files copied successfully"
 else
     # If not valid, then print error msg
     echo "Directory not found!"

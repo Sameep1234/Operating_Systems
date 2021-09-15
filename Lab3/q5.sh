@@ -15,7 +15,7 @@ echo "g. Delete file"
 echo "h. Edit content of file"
 echo "i. Exit"
 
-option=j # Declare a var with default option "j"
+option=j # Declare a var with default option "j" so that it enters while loop
 while [[ $option != "i" ]] # While loop untill "i" is pressed
 do
     read -p "Option: " option # Read option from the user

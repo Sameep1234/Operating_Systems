@@ -4,7 +4,7 @@
 if [ -d "/home/sameep/Downloads" ] # Check whether directory exists
 then
     cd /home/sameep/Downloads # If exits then recursively show sub-directory
-    ls -R
+    ls -R # List files and directories along with its subdirectories
 else
     echo "Directory Does not exist" # Print error msg if directory not found
 fi

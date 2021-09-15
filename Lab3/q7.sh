@@ -6,9 +6,6 @@ read -p "Mention the path of specific directory: " DIR
 read -p "Mention the newer date: (mm/dd/yy) " newDate
 read -p "Mention the older date: (mm/dd/yy) " oldDate
 
-# Change directory to the read input
-cd $DIR
-
 # List all files newer than a specified date
 echo "Files Newer than $newDate are"
 find . -type f -newermt "$newDate 0:00:00"

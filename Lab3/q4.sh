@@ -1,23 +1,18 @@
 #!/usr/bin/env bash
 # AU1940049 Sameep Vani
 
-# Printf will print it in specific format
-# %n = Display file name
-# %s = Display file size
-# %z = Date and Time (Human readable format) of last status change
-# %A = Access tokens (Human readable format)
-# &U = Owner/User name
-# \n = new line character
-echo "Format below = File Name | Size | Date | Protection | Owner"
-stat --printf='%n %s %z %A %U\n' **
+# Read directory name from user
+read -p "Enter the directory name: " DIR
+cd $DIR # Change to the specified directory
 
-# find -type f = Find all "files"
-# wc -l = Counting the number of these files
-echo # Just for extra spacing
-echo "Number of Files"
-find -type f | wc -l
+fileName="$(ls -lR | awk '{print $9}')" # Recursively store filename into the variable
+fileSize="$(ls -lR --block-size=KB | awk '{print $5}')" # Recursively store filename into the variable and size should be in KB
+month="$(ls -lR | awk '{print $6}')" # Recursively store month into the variable
+date="$(ls -lR | awk '{print $7}')" # Recursively store dates into the variable
+access="$(ls -lR | awk '{print $1}')" # Recursively store access into the variable
+user="$(ls -lR | awk '{print $3}')"  # Recursively store user into the variable
 
-# Size of the directory
-echo # Just for extra spacing
-echo "Size of the directory"
-stat --printf='%s' . # "." represents current directory.
+paste <(printf %s "$fileName") <(printf %s "$fileSize") <(printf %s "$month") <(printf %s "$date") <(printf %s "$access") <(printf %s "$user\n")
+# paste=Merges lines of files
+# printf=prints on the terminal
+# %s=specify that the variables are strings
