@@ -21,6 +21,10 @@ int main(void)
         printf("Child Process id: %d", getpid()); // This will not be 0 but returns its original process id.
         // NOTE THAT THE X WILL ALWAYS BE 0.
         printf("Parent Process id: %d", getppid());// This will be the process id of parent.
+        while(1) {
+
+            
+        }
     } else {
         printf("%d\n", 4); // Prints only for parent (access only to parent process)
     }
