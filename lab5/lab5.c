@@ -29,6 +29,7 @@ int main(void)
         printf("%d\n", 4); // Prints only for parent (access only to parent process)
     }
 
-    printf("Here\n"); // Prints 2 times (for child and for parent)
+    wait(NULL); // Wait untill all the child process are completed
+    printf("[%d] runs in both", getpid()); // Prints 2 times (for child and for parent)
     return 0;
 }
