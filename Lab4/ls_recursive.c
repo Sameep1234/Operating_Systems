@@ -7,19 +7,11 @@
 #include <sys/syscall.h>
 #include <string.h>
 
-/* struct dirent
-{
-    long d_ino;
-    off_t d_off;
-    unsigned short d_reclen;
-    unsigned char  d_type;
-    char d_name[256];
-}; */
-
 void recursive(char *name)
 {
     DIR *temp = opendir(name);
-    for (struct dirent *d = readdir(temp); d != NULL; d = readdir(temp))
+    struct dirent *d;
+    while((d=readdir(temp)) != NULL)
     {
         if (strncmp(d->d_name, ".", 1) == 0 ||
             strncmp(d->d_name, "..", 2) == 0) {
@@ -44,11 +36,11 @@ void recursive(char *name)
 int main(void)
 {
     struct stat sfile;
-    char *path = "/home/sameep/Extra Projects/Operating_Systems/Lab4/demo.c";
+    char *path = "/home/sameep/Extra Projects/Operating_Systems";
     int fd = open(path, O_RDONLY);
     if (fd == -1)
     {
-        perror("Open Error main");
+        perror("Open Error");
         exit(EXIT_FAILURE);
     }
 
