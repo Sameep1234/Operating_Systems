@@ -25,7 +25,7 @@ int main(){
         }
     }
     char newBuf[BUFSIZ] = {0};
-    snprintf(buf, BUFSIZ, "Lines: %d\nWords: %d\nChar: %d", lineCount, wordCount, charCount);
+    snprintf(newBuf, BUFSIZ, "Lines: %d\nWords: %d\nChar: %d", lineCount, wordCount, charCount);
     write(1, newBuf, sizeof(newBuf));
 
     close(fd);
