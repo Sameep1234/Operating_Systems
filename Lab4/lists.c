@@ -46,7 +46,7 @@ recurse(char *path)
 int
 main(void)
 {
-    recurse("/home/sameep/Extra Projects/Operating_Systems");
+    recurse("/home/sameep/Extra Projects/Operating_Systems/Lab4/demo.c");
 
     return 0;
 }
