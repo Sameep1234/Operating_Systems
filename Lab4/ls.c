@@ -16,21 +16,20 @@ struct linux_dirent
 
 int main(int argc, char *argv[])
 {
-    int fd, nread;
+    int fd, bytes;
     char buf[BUFSIZ];
     struct linux_dirent *d;
-    int bpos;
-    char d_type;
-
+    int bpos = 0;
+    
     fd = open(argc > 1 ? argv[1] : ".", O_RDONLY | O_DIRECTORY);
     if (fd == -1)
         perror("open");
 
-    nread = syscall(SYS_getdents, fd, buf, BUFSIZ);
-    if (nread == -1)
+    bytes = syscall(SYS_getdents, fd, buf, BUFSIZ);
+    if (bytes == -1)
         perror("getdents");
 
-    while(bpos < nread)
+    while(bpos < bytes)
     {
         d = (struct linux_dirent *)(buf + bpos);
         printf("%s\n", d->d_name);
