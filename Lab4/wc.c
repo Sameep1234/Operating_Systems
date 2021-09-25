@@ -24,7 +24,9 @@ int main(){
             if(buf[0] == ' ') wordCount++;
         }
     }
-    printf("%d %d %d", lineCount, wordCount, charCount);
+    char newBuf[BUFSIZ] = {0};
+    snprintf(buf, BUFSIZ, "Lines: %d\nWords: %d\nChar: %d", lineCount, wordCount, charCount);
+    write(1, newBuf, sizeof(newBuf));
 
     close(fd);
     return 0;
