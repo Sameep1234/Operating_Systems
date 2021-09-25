@@ -7,6 +7,8 @@
 #include <sys/syscall.h>
 #include <string.h>
 
+
+// For following code, it does not have comments because of its similarity with wc. So refer wc.
 void recursive(char *name)
 {
     DIR *temp = opendir(name);
@@ -28,6 +30,7 @@ void recursive(char *name)
         }
         else
         {
+            // For ls just print the directory name
             printf("%s\n", d->d_name);
         }
     }
