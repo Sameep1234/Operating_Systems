@@ -32,6 +32,8 @@ void recursive(char *name)
             char buf[BUFSIZ] = {0};
             snprintf(buf, BUFSIZ, "%s/%s", name, d->d_name);
             const char *dest = "/home/sameep/Extra Projects/Operating_Systems/destination";
+            char newBuf[BUFSIZ] = {0};
+            snprintf(newBuf, BUFSIZ, "%s/%s", dest, d->d_name);
 
             int fd0 = 0;
             if ((fd0 = open(buf, O_RDONLY)) == -1)
@@ -42,7 +44,7 @@ void recursive(char *name)
             }
 
             int fd1 = 0;
-            if ((fd1 = open(dest, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)) == -1)
+            if ((fd1 = open(newBuf, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)) == -1)
             {
                 perror("destination");
                 exit(1);
@@ -66,7 +68,6 @@ void recursive(char *name)
 
             close(fd0);
             close(fd1);
-            return 0;
         }
     }
 }
@@ -91,9 +92,42 @@ int main(void)
     }
     else
     {
+        int fd0 = 0;
         char buf[BUFSIZ] = {0};
-        snprintf(buf, BUFSIZ, "%s", path);
-        write(1, buf, sizeof(buf));
+        const char *dest = "/home/sameep/Extra Projects/Operating_Systems/destination";
+
+        if ((fd0 = open(buf, O_RDONLY)) == -1)
+        {
+            const char *str = "to copy";
+            write(2, str, strlen(str)); // 2 is for standard error
+            exit(1);
+        }
+
+        int fd1 = 0;
+        if ((fd1 = open(dest, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)) == -1)
+        {
+            perror("destination");
+            exit(1);
+        }
+
+        for (int err = read(fd0, buf, BUFSIZ); err != -1;
+             err = read(fd0, buf, BUFSIZ))
+        {
+            if (err == 0)
+            {
+                break;
+            }
+
+            if (write(fd1, buf, err) == -1)
+            {
+                perror("write");
+            }
+        }
+
+        unlink(buf);
+
+        close(fd0);
+        close(fd1);
     }
 
     return 0;
