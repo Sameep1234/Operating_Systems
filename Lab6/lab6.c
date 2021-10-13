@@ -31,4 +31,7 @@ int main()
     13. C code python open source code github repo (cpython)
     14. Biggest array (lets say 5000 lines (ref: lab6_2.c, localFile))
     15. void pointer
+    16. Functions in c and python difference 
+    17. Passing functions in c (function pointers (ref: lab6_4.c, localFile))
+    18. Runtime dispatch of functions in c
 */
