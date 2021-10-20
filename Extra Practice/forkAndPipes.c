@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
             if (fd == -1)
                 handleError("[wc] File open failed");
 
-            char buf; // Create and initilize buffer to store contents of temp.txt            
+            char buf; // Create and initilize buffer to store contents of temp.txt
             int count[3] = {0};
             // Declare and initialize an array to store line count, word count and character count
             /*
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
                 1st index represents words
                 2nd index represents lines
             */
-            
+
             // Code for wc
             while (read(fd, &buf, 1) > 0)
             {
@@ -88,13 +88,35 @@ int main(int argc, char *argv[])
             }
 
             // Write the array to pipe
-            if(write(pipefd[1], count, sizeof(count)) == -1)
+            if (write(pipefd[1], count, sizeof(count)) == -1)
                 handleError("[wc] Writing to pipe failed");
-            
+
             // Close temp.txt
-            if(close(fd) == -1)
+            if (close(fd) == -1)
                 handleError("[wc] Closing of file failed");
         }
+        close(pipefd[1]); // Close the write end of both parent and child.
+
+        wait(NULL); // Parent will wait untill all the child processes are completed.
+
+        // Declare an array of final answer
+        int finalAns[3];
+
+        // Read from pipe and store it into finalAns array
+        if (read(pipefd[0], finalAns, sizeof(finalAns)) == -1)
+            handleError("[Parent] Read from pipe failed");
+
+        // Print the final ans
+        if (strcmp(argv[3], "c") == 0)
+            printf("%d\n", finalAns[0]);
+        if (strcmp(argv[3], "w") == 0)
+            printf("%d\n", finalAns[1]);
+        if (strcmp(argv[3], "l") == 0)
+            printf("%d\n", finalAns[2]);
+
+        // Run actual wc command for comparing values
+        if (system("wc temp.txt") == -1)
+            handleError("wc command failed");
     }
     else
     {
@@ -107,29 +129,56 @@ int main(int argc, char *argv[])
         {
             /* CHILD PROCESS */
 
-            close(pipefd[0]); // Close the read end of the child pipe as it is not required.
+            close(pipefd[0]); // Close the read end of the child process
+
+            // Open temp.txt
+            int fd = open("temp.txt", O_RDONLY);
+
+            if (fd == -1)
+                handleError("[grep] Failed to open file [1]");
+
+            // Decalre a buffer and counter for lines
+            char buf = {0};
+            int lineCount = 1;
+
+            // Calculate the number of lines so that we can create an array of that much lines
+            while (read(fd, &buf, 1) > 0)
+            {
+                if (buf == '\n')
+                    lineCount++;
+            }
+
+            if (close(fd) == -1)
+                handleError("[grep] Closing file failed [1]");
+
+            // Declare array to store whole line
+            char *strTokens[lineCount];
+
+            // Reopen temp.txt for storing lines in strTokens array
+            fd = open("temp.txt", O_RDONLY);
+            if (fd == -1) // Check for error
+                handleError("[grep] Failed to open file [2]");
+
+            int i = 0;
+            while (read(fd, &buf, 1) > 0)
+            {
+                printf("BUF AGAIN: %c\n", buf);
+                strTokens[i] += buf;
+                if (buf == '\n')
+                {
+                    printf("AF: %s\n", strTokens[i]);
+                    i++;
+                }
+            }
+
+            // Close temp.txt
+            if(close(fd) == -1)
+                handleError("[grep] Closing file failed [2]");
         }
     }
 
-    close(pipefd[1]); // Close the write end of both parent and child.
+    wait(NULL); // Wait for all the child processes to complete
 
-    wait(NULL); // Parent will wait untill all the child processes are completed.
-    
-    // Declare an array of final answer
-    int finalAns[3];
-    
-    // Read from pipe and store it into finalAns array
-    if(read(pipefd[0], finalAns, sizeof(finalAns)) == -1)
-        handleError("[Parent] Read from pipe failed");
-    
-    // Print the final ans
-    printf("%d %d %d \n", finalAns[0], finalAns[1], finalAns[2]);
-    
-    // Run actual wc command for comparing values
-    if(system("wc temp.txt") == -1)
-        handleError("wc command failed");
-    
-    // Delete the previously created temp.txt file
-    unlink("temp.txt");
+    unlink("temp.txt"); // Delete the created temp.txt file
     return 0;
 }
