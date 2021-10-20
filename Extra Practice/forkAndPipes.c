@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     if (system("ps | cat >> temp.txt") == -1)
         handleError("system() error");
 
-    int pipefd[2];          // Declare pipes
+    int pipefd[2], fd = 0;      // Declare pipes
     if (pipe(pipefd) == -1) // Create pipe
         handleError("Creation of pipe failed");
 
@@ -90,10 +90,6 @@ int main(int argc, char *argv[])
             // Write the array to pipe
             if (write(pipefd[1], count, sizeof(count)) == -1)
                 handleError("[wc] Writing to pipe failed");
-
-            // Close temp.txt
-            if (close(fd) == -1)
-                handleError("[wc] Closing of file failed");
         }
         close(pipefd[1]); // Close the write end of both parent and child.
 
@@ -108,15 +104,15 @@ int main(int argc, char *argv[])
 
         // Print the final ans
         if (strcmp(argv[3], "c") == 0)
-            printf("%d\n", finalAns[0]);
+            printf("Char Count is: %d\n", finalAns[0]);
         if (strcmp(argv[3], "w") == 0)
-            printf("%d\n", finalAns[1]);
+            printf("Word Count is: %d\n", finalAns[1]);
         if (strcmp(argv[3], "l") == 0)
-            printf("%d\n", finalAns[2]);
+            printf("Line Count is: %d\n", finalAns[2]);
 
         // Run actual wc command for comparing values
         if (system("wc temp.txt") == -1)
-            handleError("wc command failed");
+            handleError("[wc] command failed");
     }
     else
     {
@@ -131,53 +127,29 @@ int main(int argc, char *argv[])
 
             close(pipefd[0]); // Close the read end of the child process
 
+            /* USING LIBRARY CALLS */
+            
             // Open temp.txt
-            int fd = open("temp.txt", O_RDONLY);
-
-            if (fd == -1)
-                handleError("[grep] Failed to open file [1]");
-
-            // Decalre a buffer and counter for lines
-            char buf = {0};
-            int lineCount = 1;
-
-            // Calculate the number of lines so that we can create an array of that much lines
-            while (read(fd, &buf, 1) > 0)
+            FILE *fp = fopen("temp.txt", "r");
+            if(fp == NULL)
+                handleError("[grep] Opening file failed!");
+            
+            char *buf, *fRead, *token;
+            while(getline(buf, sizeof(buf), fp) > 0)
             {
-                if (buf == '\n')
-                    lineCount++;
-            }
-
-            if (close(fd) == -1)
-                handleError("[grep] Closing file failed [1]");
-
-            // Declare array to store whole line
-            char *strTokens[lineCount];
-
-            // Reopen temp.txt for storing lines in strTokens array
-            fd = open("temp.txt", O_RDONLY);
-            if (fd == -1) // Check for error
-                handleError("[grep] Failed to open file [2]");
-
-            int i = 0;
-            while (read(fd, &buf, 1) > 0)
-            {
-                printf("BUF AGAIN: %c\n", buf);
-                strTokens[i] += buf;
-                if (buf == '\n')
-                {
-                    printf("AF: %s\n", strTokens[i]);
-                    i++;
-                }
+                /* LEFTTTTTTTTTT */
             }
 
             // Close temp.txt
-            if(close(fd) == -1)
-                handleError("[grep] Closing file failed [2]");
+            fclose(fp);
         }
     }
 
     wait(NULL); // Wait for all the child processes to complete
+
+    // Close temp.txt
+    if (close(fd) == -1)
+        handleError("[Parent] Closing of file failed");
 
     unlink("temp.txt"); // Delete the created temp.txt file
     return 0;
