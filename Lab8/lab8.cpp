@@ -11,7 +11,7 @@ int main()
     /*
         t = variable name for the thread
         f = function pointer which points to f
-        Compiler will understand the i need to pass the reference. But if we need to pass it to thread for classes and 
+        Compiler will not understand the i need to pass the reference and thus we need to pass it to thread for classes and 
         structs and bigger data types, we need to use std::ref(<NAME_OF_VARIABLE>)
     */
     int a = 1, b = 2;

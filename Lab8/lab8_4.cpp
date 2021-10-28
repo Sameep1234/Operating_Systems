@@ -3,9 +3,8 @@
 #include<thread>
 #include<vector>
 
-void f(std::vector<int> &v)
+void f(std::vector<int> &v, std::mutex &m)
 {
-    std::mutex m;
     std::lock_guard g{m};
 
     // m.lock();
@@ -23,8 +22,10 @@ int main()
 {
     std::vector<int> v{};
 
-    std::thread t{f, std::ref(v)};
-    std::thread u{f, std::ref(v)};
+    std::mutex m;
+
+    std::thread t{f, std::ref(v), std::ref(m)};
+    std::thread u{f, std::ref(v), std::ref(m)};
 
     if(t.joinable())
     {
