@@ -11,14 +11,16 @@ int main()
     /*
         t = variable name for the thread
         f = function pointer which points to f
+        Compiler will understand the i need to pass the reference. But if we need to pass it to thread for classes and 
+        structs and bigger data types, we need to use std::ref(<NAME_OF_VARIABLE>)
     */
     std::thread t{f, 1, 2}; // Create a thread in cpp
-                      /*
-                          This will result in an error because we are not defining what to do with the thread.
-                          Thus, whenever we create a thread, we need to join the thread which is done below.
-                          Functions are callable which means that anything that can be "called" using a paranthesis.
-                          Thus, we always pass callable object in thread variable.
-                      */
+                            /*
+                                This will result in an error because we are not defining what to do with the thread.
+                                Thus, whenever we create a thread, we need to join the thread which is done below.
+                                Functions are callable which means that anything that can be "called" using a paranthesis.
+                                Thus, we always pass callable object in thread variable.
+                            */
     if (t.joinable())
     {
         t.join(); // This is analogous to wait() in c. It will wait for all other threads to complete and then will execute.
