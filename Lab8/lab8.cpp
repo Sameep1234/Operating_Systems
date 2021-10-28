@@ -14,7 +14,8 @@ int main()
         Compiler will understand the i need to pass the reference. But if we need to pass it to thread for classes and 
         structs and bigger data types, we need to use std::ref(<NAME_OF_VARIABLE>)
     */
-    std::thread t{f, 1, 2}; // Create a thread in cpp
+    int a = 1, b = 2;
+    std::thread t{f, std::ref(a), std::ref(b)}; // Create a thread in cpp
                             /*
                                 This will result in an error because we are not defining what to do with the thread.
                                 Thus, whenever we create a thread, we need to join the thread which is done below.
