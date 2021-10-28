@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 
-void f(int a, int b)
+void f(int &a, int &b)
 {
     std::cout << "Hello World!\n";
 }
