@@ -3,6 +3,17 @@
 #include<thread>
 #include<vector>
 
+/* CODE WITH MUTEX AS ARGUMENT */
+
+
+/*
+    As discussed earlier, the mutext variable must have some global/parent scope so that it becomes a shared resource 
+    and mutex is achieved.
+    Here, we are following the second approach of declaring the mutex in main thread and passing it as an argument in 
+    function "f" and initializing lock guard in it.
+    Thus, now there is a parent authority (main thread) which will take care of mutex.
+*/
+
 void f(std::vector<int> &v, std::mutex &m)
 {
     std::lock_guard g{m};

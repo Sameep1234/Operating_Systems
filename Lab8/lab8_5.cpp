@@ -3,6 +3,18 @@
 #include <thread>
 #include <vector>
 
+/* CREATING MULTIPLE THREADS */
+
+/*
+    It is very well possible that we are required to create multiple threads for each component of job we need to perform.
+    Thus, it is almost impossible to write thread creation statement about 100 times with different variable names.
+    Thus, we use for loop and create array of thread.
+
+    Note that printing statements are written after join statement because we need to wait for all the threads to complete
+    their execution and then main thread will be able to print the values contained in vector v without interference from
+    ny other threads.
+*/
+
 void f(std::vector<int> &v, std::mutex &m)
 {
     std::lock_guard g{m};
