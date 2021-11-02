@@ -12,8 +12,11 @@ void f(std::vector<int> &v, std::mutex &m)
     {
         // m.lock()
         v.push_back(i);
-        std::cout << v[i] << "\n";
         // m.unlock()
+    }
+    for (auto &i : v)
+    {
+        std::cout << i << "\n";
     }
     // m.unlock();
 }
